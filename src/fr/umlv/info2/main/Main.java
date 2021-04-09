@@ -14,20 +14,20 @@ public class Main {
         var matrixRandom = Graphs.matrixRandomizer(10);
 
         FileWriter writer = new FileWriter("digraph.dot");
-        writer.write(matrixRandom.toGraphviz());
+        writer.write(matrixFromMat.toGraphviz());
         writer.close();
 
-        var vertices = Graphs.BFS(matrixRandom, 0);
+        var vertices = Graphs.BFS(matrixFromMat, 0);
         System.out.println(vertices);
-        vertices = Graphs.DFS(matrixRandom, 0);
-        System.out.println(vertices);
+//        var vertices = Graphs.DFS(matrixFromMat, 3);
+//        System.out.println(vertices);
 
-        var adjList = new AdjGraph(4);
-        adjList.addEdge(0, 3, 1);
-        adjList.addEdge(1, 2, 4);
-        adjList.addEdge(2, 3, 2);
-
-        vertices = Graphs.DFS(adjList, 0);
-        System.out.println(vertices);
+//        var adjList = new AdjGraph(4);
+//        adjList.addEdge(0, 3, 1);
+//        adjList.addEdge(1, 2, 4);
+//        adjList.addEdge(2, 3, 2);
+//
+//        vertices = Graphs.DFS(adjList, 0);
+//        System.out.println(vertices);
     }
 }
