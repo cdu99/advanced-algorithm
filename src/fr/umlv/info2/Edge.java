@@ -1,5 +1,7 @@
 package fr.umlv.info2;
 
+import java.util.Objects;
+
 public class Edge {
     private final int start;
     private final int end;
@@ -34,13 +36,18 @@ public class Edge {
 
     @Override
     public boolean equals(Object obj) {
-        // TODO
-        return true;
+        boolean result;
+        if ((obj == null) || (getClass() != obj.getClass())) {
+            result = false;
+        } else {
+            Edge edge = (Edge) obj;
+            result = start == edge.getStart() && end == edge.getEnd() && value == edge.getValue();
+        }
+        return result;
     }
 
     @Override
     public int hashCode() {
-        // TODO
-        return 0;
+        return Objects.hash(start, end, value);
     }
 }
