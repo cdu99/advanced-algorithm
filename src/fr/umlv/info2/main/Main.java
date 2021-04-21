@@ -14,20 +14,27 @@ public class Main {
 
         try (FileWriter writer = new FileWriter("digraph.dot")) {
             writer.write(matrixFromMat.toGraphviz());
-            writer.close();
 
+//            var adjGraph = new AdjGraph(9);
+//            adjGraph.addEdge(0, 1, 1);
+//            adjGraph.addEdge(0, 2, 1);
+//            adjGraph.addEdge(2, 1, 1);
+//            adjGraph.addEdge(2, 4, 1);
+//            adjGraph.addEdge(3, 2, 1);
+//            adjGraph.addEdge(3, 7, 1);
+//            adjGraph.addEdge(4, 6, 1);
+//            adjGraph.addEdge(5, 4, 1);
+//            adjGraph.addEdge(5, 0, 1);
+//            adjGraph.addEdge(6, 5, 1);
+//            adjGraph.addEdge(7, 8, 1);
+//            adjGraph.addEdge(8, 3, 1);
+
+            System.out.println("RUNNING BFS ON THE GRAPH:");
             var vertices = Graphs.BFS(matrixFromMat, 0);
             System.out.println(vertices);
 
-            vertices = Graphs.DFS(matrixFromMat, 3);
-            System.out.println(vertices);
-
-            var adjList = new AdjGraph(4);
-            adjList.addEdge(0, 3, 1);
-            adjList.addEdge(1, 2, 4);
-            adjList.addEdge(2, 3, 2);
-
-            vertices = Graphs.DFS(adjList, 0);
+            System.out.println("RUNNING DFS ON THE GRAPH:");
+            vertices = Graphs.DFS(matrixFromMat, 0);
             System.out.println(vertices);
         }
     }

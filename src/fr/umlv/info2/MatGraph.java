@@ -59,40 +59,38 @@ public class MatGraph implements Graph {
 
     @Override
     public Iterator<Edge> edgeIterator(int i) {
-        if (i < 0 || i > n) {
+        if (i >= n) {
             throw new IllegalArgumentException();
         }
         return new Iterator<>() {
-            private int index = 0;
-            private Optional<Edge> edge = getEdge();
+            private Optional<Edge> current = getNextEdge(0, mat[i], i);
 
             @Override
             public boolean hasNext() {
-                return edge.isPresent();
-            }
-
-            private Optional<Edge> getEdge() {
-                for (int idx = index; idx < n; idx++) {
-                    if (mat[i][idx] != 0) {
-                        var edge = new Edge(i, index, mat[i][idx]);
-                        index = idx + 1;
-                        return Optional.of(edge);
-                    }
-                }
-
-                return Optional.empty();
+                return current.isPresent();
             }
 
             @Override
             public Edge next() {
                 if (!hasNext()) {
-                    throw new NoSuchElementException();
+                    throw new UnsupportedOperationException();
                 }
-                var value = edge;
-                edge = getEdge();
-                return value.orElseThrow();
+                var toReturn = current;
+                current = getNextEdge(current.get().getEnd() + 1, mat[i], i);
+                return toReturn.orElseThrow();
             }
         };
+    }
+
+    private Optional<Edge> getNextEdge(int current, int[] row, int start) {
+        if (current < row.length) {
+            for (int i = current; i < row.length; i++) {
+                if (row[i] != 0) {
+                    return Optional.of(new Edge(start, i, row[i]));
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
