@@ -70,6 +70,37 @@ public class Graphs {
         longAdder.increment();
     }
 
+    public static List<Integer> topologicalSort(Graph g, boolean cycleDetect) {
+        if (cycleDetect) {
+            throw new IllegalArgumentException("There is a cycle in the graph");
+        }
+        var visited = new boolean[g.numberOfVertices()];
+        var result = new ArrayList<Integer>();
+        for (var i = 0; i < g.numberOfVertices(); i++) {
+            if (!visited[i]) {
+                if (!topologicalSortRec(g, i, visited, result)) {
+                    throw new IllegalArgumentException("There is a cycle in the graph");
+                }
+            }
+        }
+        Collections.reverse(result);
+        return result;
+    }
+
+    public static boolean topologicalSortRec(Graph g, int v, boolean[] visited, List<Integer> result) {
+        visited[v] = true;
+        Iterator<Edge> iterator = g.edgeIterator(v);
+        while (iterator.hasNext()) {
+            var next = iterator.next().getEnd();
+            if (!visited[next]) {
+                topologicalSortRec(g, next, visited, result);
+            }
+        }
+        result.add(v);
+        return true;
+    }
+
+
     public static MatGraph matrixRandomizer(int nbOfVertices) {
         var mat = new MatGraph(nbOfVertices);
         Random rand = new Random();

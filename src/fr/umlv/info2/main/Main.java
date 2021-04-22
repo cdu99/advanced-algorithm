@@ -43,6 +43,10 @@ public class Main {
                 System.out.println(i + " (" + time[i][0] + "|" + time[i][1] + ")");
             }
 
+            System.out.println("TOPOLOGICAL SORT:");
+            var topological = Graphs.topologicalSort(matrixFromMat, false);
+            System.out.println(topological);
+
         }
     }
 }
