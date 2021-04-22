@@ -19,4 +19,16 @@ public interface Graph {
     void forEachEdge(int i, Consumer<Edge> consumer);
 
     String toGraphviz();
+
+    default Graph transpose() {
+        var transposedGraph = new MatGraph(numberOfVertices());
+        for (var i = 0; i < numberOfVertices(); i++) {
+            for (var j = 0; j < numberOfVertices(); j++) {
+                if (isEdge(i, j)) {
+                    transposedGraph.addEdge(j, i, getWeight(i, j));
+                }
+            }
+        }
+        return transposedGraph;
+    }
 }

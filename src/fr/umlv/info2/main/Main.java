@@ -47,6 +47,8 @@ public class Main {
             var topological = Graphs.topologicalSort(matrixFromMat, false);
             System.out.println(topological);
 
+            System.out.println("SCC:");
+            System.out.println(Graphs.scc(matrixFromMat));
         }
     }
 }
