@@ -36,6 +36,13 @@ public class Main {
             System.out.println("RUNNING DFS ON THE GRAPH:");
             vertices = Graphs.DFS(matrixFromMat, 0);
             System.out.println(vertices);
+
+            System.out.println("RUNNING TIMED DFS ON THE GRAPH:");
+            var time = Graphs.timedDFS(matrixFromMat, 0);
+            for (var i = 0; i < time.length; i++) {
+                System.out.println(i + " (" + time[i][0] + "|" + time[i][1] + ")");
+            }
+
         }
     }
 }
