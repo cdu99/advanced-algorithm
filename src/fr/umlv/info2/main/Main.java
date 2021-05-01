@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        var matrixFromMat = MatGraph.makeGraphFromMatrixFile(Path.of("src/fr/umlv/info2/main/my_graph.mat"));
+        var matrixFromMat = MatGraph.makeGraphFromMatrixFile(Path.of("src/fr/umlv/info2/main/my_graph_test_shortest_path_dijkstra.mat"));
 
         try (FileWriter writer = new FileWriter("digraph.dot")) {
             writer.write(matrixFromMat.toGraphviz());
@@ -49,6 +49,16 @@ public class Main {
 
             System.out.println("SCC:");
             System.out.println(Graphs.scc(matrixFromMat));
+
+            System.out.println("RUNNING BELLMAN FORD ON THE GRAPH:");
+            var shortestPathFromOneVertex = Graphs.bellmanFord(matrixFromMat, 4);
+            System.out.println(shortestPathFromOneVertex);
+            shortestPathFromOneVertex.printShortestPathTo(5);
+
+            System.out.println("RUNNING DIJKSTRA ON THE GRAPH:");
+            shortestPathFromOneVertex = Graphs.dijkstra(matrixFromMat, 4);
+            System.out.println(shortestPathFromOneVertex);
+            shortestPathFromOneVertex.printShortestPathTo(5);
         }
     }
 }

@@ -171,7 +171,6 @@ public class Graphs {
         return list;
     }
 
-
     public static MatGraph matrixRandomizer(int nbOfVertices) {
         var mat = new MatGraph(nbOfVertices);
         Random rand = new Random();
@@ -179,5 +178,92 @@ public class Graphs {
             mat.addEdge(rand.nextInt(nbOfVertices), rand.nextInt(nbOfVertices), rand.nextInt(nbOfVertices));
         }
         return mat;
+    }
+
+    public static ShortestPathFromOneVertex bellmanFord(Graph g, int source) {
+        var numberOfVertices = g.numberOfVertices();
+        var d = new int[numberOfVertices];
+        var pi = new int[numberOfVertices];
+        for (var i = 0; i < numberOfVertices; i++) {
+            d[i] = Integer.MAX_VALUE;
+            // -1 --> Empty
+            pi[i] = -1;
+        }
+        d[source] = 0;
+        for (var j = 1; j < numberOfVertices - 1; j++) {
+            for (var k = 0; k < numberOfVertices; k++) {
+                Iterator<Edge> iterator = g.edgeIterator(k);
+                while (iterator.hasNext()) {
+                    var edge = iterator.next();
+                    var edgeWeight = edge.getValue();
+                    var edgeEnd = edge.getEnd();
+                    if (d[k] != Integer.MAX_VALUE && d[k] + edgeWeight < d[edgeEnd]) {
+                        d[edgeEnd] = d[k] + edgeWeight;
+                        pi[edgeEnd] = k;
+                    }
+                }
+            }
+        }
+        // To detect negative loops
+        for (var l = 0; l < numberOfVertices; l++) {
+            var it = g.edgeIterator(l);
+            if (d[l] == Integer.MAX_VALUE) {
+                continue;
+            }
+            while (it.hasNext()) {
+                var edge = it.next();
+                var edgeWeight = edge.getValue();
+                var edgeEnd = edge.getEnd();
+
+                if (d[l] + edgeWeight < d[edgeEnd]) {
+                    throw new IllegalArgumentException("Graph contains negative loop");
+                }
+            }
+        }
+        d = Arrays.stream(d).map(i -> i == Integer.MAX_VALUE ? -1 : i).toArray();
+        return new ShortestPathFromOneVertex(source, d, pi);
+    }
+
+    public static ShortestPathFromOneVertex dijkstra(Graph g, int source) {
+        var numberOfVertices = g.numberOfVertices();
+        var todo = new BitSet(numberOfVertices);
+        var d = new int[numberOfVertices];
+        var pi = new int[numberOfVertices];
+        for (var i = 0; i < numberOfVertices; i++) {
+            d[i] = Integer.MAX_VALUE;
+            pi[i] = -1;
+            todo.set(i);
+        }
+        d[source] = 0;
+
+        while (!todo.isEmpty()) {
+            var s = todo.nextSetBit(0);
+            for (var k = s + 1; k < g.numberOfVertices(); k++) {
+                if (!todo.get(k)) {
+                    continue;
+                }
+                if (d[k] < d[s]) {
+                    s = k;
+                }
+            }
+            todo.set(s, false);
+
+            if (d[s] == Integer.MAX_VALUE) {
+                continue;
+            }
+
+            var iterator = g.edgeIterator(s);
+            while (iterator.hasNext()) {
+                var edge = iterator.next();
+                var edgeWeight = edge.getValue();
+                var edgeEnd = edge.getEnd();
+                if (d[s] + edgeWeight < d[edgeEnd]) {
+                    d[edgeEnd] = d[s] + edgeWeight;
+                    pi[edgeEnd] = s;
+                }
+            }
+        }
+        d = Arrays.stream(d).map(i -> i == Integer.MAX_VALUE ? -1 : i).toArray();
+        return new ShortestPathFromOneVertex(source, d, pi);
     }
 }
