@@ -100,7 +100,7 @@ public class Graphs {
         return true;
     }
 
-    // This visit all vertices
+    // This visit all vertices (no source)
     public static int[][] timedDFS(Graph g) {
         var visited = new boolean[g.numberOfVertices()];
         var longAdder = new LongAdder();
@@ -265,5 +265,46 @@ public class Graphs {
         }
         d = Arrays.stream(d).map(i -> i == Integer.MAX_VALUE ? -1 : i).toArray();
         return new ShortestPathFromOneVertex(source, d, pi);
+    }
+
+    public static ShortestPathFromAllVertices floydWarshall(Graph g) {
+        var numberOfVertices = g.numberOfVertices();
+        var d = new int[numberOfVertices][];
+        var pi = new int[numberOfVertices][];
+
+        for (var i = 0; i < numberOfVertices; i++) {
+            d[i] = new int[numberOfVertices];
+            pi[i] = new int[numberOfVertices];
+            for (var j = 0; j < numberOfVertices; j++) {
+                d[i][j] = Integer.MAX_VALUE;
+                pi[i][j] = -1;
+            }
+            d[i][i] = 0;
+            pi[i][i] = i;
+
+            var iterator = g.edgeIterator(i);
+            while (iterator.hasNext()) {
+                var edge = iterator.next();
+                var value = edge.getValue();
+                var start = edge.getStart();
+                var end = edge.getEnd();
+                if (value < d[start][end]) {
+                    d[start][end] = value;
+                    pi[start][end] = start;
+                }
+            }
+        }
+        for (var k = 0; k < numberOfVertices; k++) {
+            for (var s = 0; s < numberOfVertices; s++) {
+                for (var t = 0; t < numberOfVertices; t++) {
+                    if (d[s][k] != Integer.MAX_VALUE && d[k][t] != Integer.MAX_VALUE && d[s][t] > d[s][k] + d[k][t]) {
+                        d[s][t] = d[s][k] + d[k][t];
+                        pi[s][t] = pi[k][t];
+                    }
+                }
+            }
+        }
+
+        return new ShortestPathFromAllVertices(d, pi);
     }
 }
